@@ -22,7 +22,7 @@ export default defineComponent({
           name: "Homepage",
         });
         this.addAlert({
-          message: "Новйи дизайн успішно створено.",
+          message: "Новий дизайн успішно створено.",
         });
       } finally {
         this.setLoader(false);
