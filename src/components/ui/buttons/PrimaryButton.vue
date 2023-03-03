@@ -6,12 +6,8 @@ export type TButtonType = "button" | "submit";
 export default defineComponent({
   props: {
     type: {
-      type: Boolean,
+      type: String as () => TButtonType,
       default: "button",
-    },
-    disabled: {
-      type: Boolean,
-      default: false,
     },
   },
 });
@@ -19,7 +15,7 @@ export default defineComponent({
 
 <template>
   <button
-    v-bind="{ type, disabled }"
+    v-bind="{ type }"
     class="relative border rounded-md bg-active text-white py-1.5 px-3"
     style="border-color: rgba(0, 0, 0, 0.2)"
   >

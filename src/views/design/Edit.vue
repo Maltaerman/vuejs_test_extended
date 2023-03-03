@@ -36,9 +36,11 @@ export default defineComponent({
   <div class="px-8 py-6">
     <EditForm
       @submit="addDesign"
-      @delete="addAlert({
-        message: 'Ця функція у розробці.',
-      })"
+      @delete="
+        addAlert({
+          message: 'Ця функція у розробці.',
+        })
+      "
     />
   </div>
 </template>

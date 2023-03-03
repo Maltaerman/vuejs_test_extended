@@ -95,13 +95,13 @@ export default defineComponent({
 </script>
 
 <template>
-  <form class="grid grid-cols-13 gap-1" @submit.prevent="submit">
+  <form @submit.prevent="submit">
     <div
-      class="col-start-1 col-end-12 flex flex-wrap items-center justify-between mb-6"
+      class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6"
     >
       <div class="flex flex-wrap">
         <router-link :to="{ name: 'Homepage' }">
-          <ArrowLeftIcon width="24" height="24" class="mr-16" />
+          <ArrowLeftIcon width="24" height="24" class="mr-2 sm:mr-16" />
         </router-link>
         <Toggle
           v-model="formData.published"
@@ -112,106 +112,104 @@ export default defineComponent({
         />
       </div>
 
-      <div class="flex flex-wrap">
-        <SecondaryButton
-          type="button"
-          class="mr-2"
-          @click="$emit('delete')
-        "
-        > Видалити
-      </SecondaryButton>
+      <div class="flex flex-row">
+        <SecondaryButton type="button" class="mr-2" @click="$emit('delete')">
+          Видалити
+        </SecondaryButton>
         <PrimaryButton type="submit"> Зберегти і вийти </PrimaryButton>
       </div>
     </div>
 
-    <div
-      v-if="formData.images.length"
-      class="col-start-1 col-end-7 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mb-6"
-    >
+    <div class="grid grid-cols-6   gap-1" style="max-width: 600px">
       <div
-        v-for="(image, key) in formData.images"
-        :key="image.name"
-        class="p-2 relative group"
+        v-if="formData.images.length"
+        class="col-start-1 col-end-7 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mb-6"
       >
-        <img
-          :src="getSrc(formData.images[key])"
-          alt=""
-          class="rounded-sm cursor-pointer"
-        />
-        <button
-          type="button"
-          class="hidden group-hover:block absolute right-4 bottom-4 p-2 rounded"
-          style="background-color: rgba(0, 0, 0, 0.5)"
-          @click="formData.images.splice(key, 1)"
+        <div
+          v-for="(image, key) in formData.images"
+          :key="image.name"
+          class="p-2 relative group"
         >
-          <DeleteIcon fill="white" />
-        </button>
-      </div>
-      <div
-        class="p-2 border bortder-2 border-dashed flex items-center justify-center"
-        style="min-height: 100px"
-      >
-        <PlusIcon />
-      </div>
-    </div>
-    <div
-      v-else
-      class="col-start-1 col-end-7 border bortder-2 border-dashed w-full py-9 flex items-center justify-center mb-4"
-    >
-      <ImageIcon width="60px" heigth="48px" />
-    </div>
-
-    <Input
-      v-model.number="formData.code"
-      v-bind="{
-        placeholder: '###',
-        maxlength: 3,
-        errors: errors.code,
-      }"
-      class="col-start-1 col-end-7 sm:col-end-2"
-    />
-
-    <Input
-      v-model="formData.name"
-      v-bind="{
-        placeholder: 'Назва дизайну',
-        errors: errors.name,
-      }"
-      class="col-start-1 col-end-7 sm:col-start-2"
-    />
-
-    <Input
-      v-model="formData.link"
-      v-bind="{
-        placeholder: 'https://design###.horoshop.ua/',
-        errors: errors.link,
-      }"
-      class="col-start-1 col-end-7"
-    />
-
-    <div v-if="formData.images.length" class="col-start-1 col-end-7">
-      <div
-        v-for="image in formData.images"
-        :key="image.name"
-        class="w-full bg-gray-50 mb-2 p-2 flex flex-row justify-between items-center"
-      >
-        <div class="flex flex-row items-center">
-          <ImageIcon class="mr-2 text-gray-600" width="16" height="16" />
-          <p class="text-blue-400" v-text="image.name" />
+          <img
+            :src="getSrc(formData.images[key])"
+            alt=""
+            class="rounded-sm cursor-pointer"
+          />
+          <button
+            type="button"
+            class="hidden group-hover:block absolute right-4 bottom-4 p-2 rounded"
+            style="background-color: rgba(0, 0, 0, 0.5)"
+            @click="formData.images.splice(key, 1)"
+          >
+            <DeleteIcon fill="white" />
+          </button>
         </div>
-
-        <button type="button" @click="formData.images.splice(key, 1)">
-          <DeleteIcon fill="red" />
-        </button>
+        <div
+          class="p-2 border bortder-2 border-dashed flex items-center justify-center"
+          style="min-height: 100px"
+        >
+          <PlusIcon />
+        </div>
       </div>
-    </div>
+      <div
+        v-else
+        class="col-start-1 col-end-7 border bortder-2 border-dashed w-full py-9 flex items-center justify-center mb-4"
+      >
+        <ImageIcon width="60px" heigth="48px" />
+      </div>
 
-    <ImagePicker
-      class="col-start-1 col-end-7"
-      v-bind="{
-        errors: errors.images,
-      }"
-      @update:modelValue="(image) => formData.images.push(image)"
-    />
+      <Input
+        v-model.number="formData.code"
+        v-bind="{
+          placeholder: '###',
+          maxlength: 3,
+          errors: errors.code,
+        }"
+        class="col-start-1 col-end-7 sm:col-end-2"
+      />
+
+      <Input
+        v-model="formData.name"
+        v-bind="{
+          placeholder: 'Назва дизайну',
+          errors: errors.name,
+        }"
+        class="col-start-1 col-end-7 sm:col-start-2"
+      />
+
+      <Input
+        v-model="formData.link"
+        v-bind="{
+          placeholder: 'https://design###.horoshop.ua/',
+          errors: errors.link,
+        }"
+        class="col-start-1 col-end-7"
+      />
+
+      <div v-if="formData.images.length" class="col-start-1 col-end-7">
+        <div
+          v-for="image in formData.images"
+          :key="image.name"
+          class="w-full bg-gray-50 mb-2 p-2 flex flex-row justify-between items-center"
+        >
+          <div class="flex flex-row items-center">
+            <ImageIcon class="mr-2 text-gray-600" width="16" height="16" />
+            <p class="text-blue-400" v-text="image.name" />
+          </div>
+
+          <button type="button" @click="formData.images.splice(key, 1)">
+            <DeleteIcon fill="red" />
+          </button>
+        </div>
+      </div>
+
+      <ImagePicker
+        class="col-start-1 col-end-7"
+        v-bind="{
+          errors: errors.images,
+        }"
+        @update:modelValue="(image) => formData.images.push(image)"
+      />
+    </div>
   </form>
 </template>
