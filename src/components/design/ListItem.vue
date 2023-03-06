@@ -29,8 +29,9 @@ export default defineComponent({
 <template>
   <div class="flex flex-col">
     <img
-      style="max-height: 300px; aspect-ratio: 1 / 1.5"
+      style="aspect-ratio: 1 / 1.5; width: 100%; max-width: 360px"
       :src="getSrc(images[0])"
+      loading="lazy"
     />
     <div class="flex flex-wrap mt-4">
       <p class="bg-white mr-2 rounded-lg px-2" v-text="code" />

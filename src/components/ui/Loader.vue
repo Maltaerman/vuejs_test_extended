@@ -1,27 +1,40 @@
-<script setup lang="ts">
-import { ref, provide } from "vue";
-import { RouterLink, RouterView } from "vue-router";
+<script lang="ts">
+import { ref, provide, defineComponent } from "vue";
 import RouteLayout from "@/layouts/RouteLayout.vue";
 
-const visibility = ref(false);
-const setLoader = (value: boolean) => (visibility.value = value);
-
-provide("setLoader", setLoader);
+export default defineComponent({
+  components: {
+    RouteLayout,
+  },
+  data() {
+    return {
+      visibility: false,
+    };
+  },
+  methods: {
+    setLoader(value: boolean) {
+      return (this.visibility = value);
+    },
+  },
+  provide() {
+    return {
+      setLoader: this.setLoader,
+    };
+  },
+});
 </script>
 
 <template>
   <transition
-    enter-active-class="transition ease-in"
-    enter-from-class="opacity-0"
-    enter-to-class="opacity-100"
-    leave-active-class="transition ease-in-out"
-    leave-from-class="opacity-100"
-    leave-to-class="opacity-0"
+    enter-from-class="scale-[0%]"
+    leave-to-class="scale-[0%]"
+    enter-active-class="transition duration-300"
+    leave-active-class="transition duration-300"
   >
     <div v-if="visibility" class="fixed z-50 top-[50%] left-[50%]">
       <svg
         aria-hidden="true"
-        class="w-14 h-14 text-gray-200 animate-spin dark:text-gray-600 fill-active"
+        class="w-9 h-9 text-gray-200 animate-spin fill-active"
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

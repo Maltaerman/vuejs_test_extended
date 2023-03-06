@@ -11,20 +11,23 @@ export default defineComponent({
     ListItem,
     PrimaryButton,
   },
-  data: () => ({
-    router: useRouter(),
-    store: useDesignsStore(),
-  }),
+  inject: ["setLoader"],
+  data() {
+    return {
+      router: useRouter(),
+      store: useDesignsStore(),
+      setLoader: this.setLoader,
+    };
+  },
   computed: {
     designs() {
       return this.store.designs.data;
     },
   },
-  inject: ["setLoader"],
   async created() {
     try {
       this.setLoader(true);
-      await this.store.fetch();
+      await this.store.fetchDesigns();
     } finally {
       this.setLoader(false);
     }
@@ -33,13 +36,21 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="px-6 py-8" style="background-color: #2c3d39">
-    <div class="flex flex-wrap justify-between items-center mb-10 w-full">
-      <h1 class="text-white" v-text="'Всі дизайни'" />
+  <div style="background-color: #2c3d39">
+    <div class="flex flex-wrap justify-between items-center w-full mb-5">
+      <h1
+        class="text-white"
+        style="
+          font-weight: 400
+          font-size: 24px;
+          line-height: 40px
+        "
+        v-text="'Всі дизайни'"
+      />
       <PrimaryButton
         @click="
           router.push({
-            name: 'EditDesign',
+            name: 'CreateDesign',
           })
         "
       >
@@ -47,11 +58,19 @@ export default defineComponent({
       </PrimaryButton>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5"
+    >
       <div
         v-for="{ id, ...props } in designs"
         :key="id"
-        class="flex items-center justify-center p-2 py-5"
+        class="flex items-center justify-center mb-6 cursor-pointer"
+        @click="
+          router.push({
+            name: 'EditDesign',
+            params: { id },
+          })
+        "
       >
         <ListItem v-bind="props" />
       </div>

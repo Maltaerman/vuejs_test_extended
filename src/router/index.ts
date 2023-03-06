@@ -19,13 +19,22 @@ const router = createRouter({
         import("@/views/design/List.vue"),
     },
     {
-      path: "/design/edit",
+      path: "/design/create",
+      name: "CreateDesign",
+      meta: {
+        layout: Namespace.Default,
+      },
+      component: (): Promise<RouteComponent> =>
+        import("@/views/design/CreateDesignView.vue"),
+    },
+    {
+      path: "/design/update/:id",
       name: "EditDesign",
       meta: {
         layout: Namespace.Default,
       },
       component: (): Promise<RouteComponent> =>
-        import("@/views/design/Edit.vue"),
+        import("@/views/design/UpdateDesignView.vue"),
     },
     {
       path: "/:catchAll(.*)",

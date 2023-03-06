@@ -1,21 +1,35 @@
 <script lang="ts">
-import { defineComponent, provide } from "vue";
-import DeleteIcon from "@/components/icons/DeleteIcon.vue";
+import { defineComponent, provide, type Ref } from "vue";
+import Alert from "@/components/ui/Alert.vue";
 
-export interface IAddAlertPayload {
-  readonly message: string;
-  readonly id?: string;
+export interface IAlert {
+  id: string;
+  message: string;
+  delay?: number;
+}
+
+export interface IAddAlertPayload extends IAlert {}
+
+export interface IData {
+  alerts: IAlert[];
+  refs: Ref[];
+  margin: number;
 }
 
 export default defineComponent({
   components: {
-    DeleteIcon,
+    Alert,
   },
-  data: () => ({
+  data: (): IData => ({
     alerts: [
       {
-        id: "initial-alert-id",
-        message: "Hi. I hope you enjoy this work.",
+        id: "initial-message-id",
+        message: `
+          Доброго дня. Було дуже приємно отримати швидкий відгуки від Софії та Антона на помилку у дизайні що я вказа.
+          Для мене якість колективу є першочерговим, тому я вирішив зробити трохи більше щоб показати свою зацікавленість у співпраці.
+          Прошу сприймати це як рекомендаційний лист.
+        `,
+        delay: 16,
       },
     ],
     refs: [],
@@ -71,19 +85,19 @@ export default defineComponent({
     enter-to-class="opacity-100"
     tag="div"
   >
-    <div
-      v-for="({ id, message }, key) in alerts"
+    <Alert
+      v-for="({ id, message, delay }, key) in alerts"
       :key="id"
       :ref="(el) => setItemRef(el, key)"
-      class="absolute z-40 transition-all duration-300 w-11/12 p-2 border bordr-gra-600 left-1/2 transform -translate-x-1/2 rounded flex flex-row justify-between"
-      :class="`left-${margin} right-${margin}`"
+      class="absolute z-40 transition-all duration-300 w-11/12 left-1/2 transform -translate-x-1/2"
       :style="`top: ${positions[key]}px; background-color: rgb(98, 123, 122)`"
-    >
-      <p class="text-white" v-text="message" />
-      <button type="button" class="text-white" @click="deleteAlert(key)">
-        <DeleteIcon fill="red" />
-      </button>
-    </div>
+      v-bind="{
+        message,
+        delay,
+      }"
+      @delete="deleteAlert(id)"
+    />
   </transition-group>
+  <div></div>
   <slot />
 </template>

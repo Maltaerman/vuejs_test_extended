@@ -9,13 +9,17 @@ export default defineComponent({
       type: String as () => TButtonType,
       default: "button",
     },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
   },
 });
 </script>
 
 <template>
   <button
-    v-bind="{ type }"
+    v-bind="{ type, disabled }"
     class="relative border rounded-md bg-active text-white py-1.5 px-3"
     style="border-color: rgba(0, 0, 0, 0.2)"
   >

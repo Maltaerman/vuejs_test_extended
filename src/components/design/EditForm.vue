@@ -12,6 +12,8 @@ import PlusIcon from "@/components/icons/PlusIcon.vue";
 import DeleteIcon from "@/components/icons/DeleteIcon.vue";
 import { mapState } from "pinia";
 import { useDesignsStore } from "@/stores/designs";
+import Validation from "@/mixins/validations/design/EditFormValidation.vue";
+import type { IDesign } from "@/types/designs";
 
 export interface IFormData {
   published: boolean;
@@ -28,7 +30,6 @@ export interface IErrors {
 }
 export interface IData {
   formData: IFormData;
-  errors: IErrors;
 }
 
 export default defineComponent({
@@ -43,17 +44,22 @@ export default defineComponent({
     PlusIcon,
     DeleteIcon,
   },
+  mixins: [Validation],
+  props: {
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+    value: {
+      type: Object as () => IDesign,
+    },
+  },
   data: (): IData => ({
     formData: {
       published: false,
       code: "",
       name: "",
       link: "",
-      images: [],
-    },
-    errors: {
-      name: [],
-      code: [],
       images: [],
     },
   }),
@@ -69,19 +75,6 @@ export default defineComponent({
       if (typeof file === "string") return file;
       return URL.createObjectURL(file);
     },
-    setErrors() {
-      !this.formData.name && this.errors.name.push("Ім`я обов`язкове.");
-      !this.formData.code && this.errors.code.push("Код обов`язковий.");
-      !this.formData.images.length &&
-        this.errors.images.push("Потрібно принаймні одне зображення.");
-    },
-    resetErrors() {
-      this.errors = {
-        name: [],
-        code: [],
-        images: [],
-      };
-    },
     submit() {
       this.resetErrors();
       if (this.isValid) {
@@ -89,6 +82,14 @@ export default defineComponent({
       } else {
         this.setErrors();
       }
+    },
+  },
+  watch: {
+    value(value) {
+      if (this.value) {
+        this.formData = this.value;
+      }
+      deep: true;
     },
   },
 });
@@ -111,24 +112,29 @@ export default defineComponent({
           }"
         />
       </div>
-
       <div class="flex flex-row">
-        <SecondaryButton type="button" class="mr-2" @click="$emit('delete')">
+        <SecondaryButton
+          type="button"
+          v-bind="{ disabled }"
+          class="mr-2"
+          @click="$emit('delete')"
+        >
           Видалити
         </SecondaryButton>
-        <PrimaryButton type="submit"> Зберегти і вийти </PrimaryButton>
+        <PrimaryButton type="submit" v-bind="{ disabled }">
+          Зберегти і вийти
+        </PrimaryButton>
       </div>
     </div>
 
-    <div class="grid grid-cols-6   gap-1" style="max-width: 600px">
+    <div class="grid grid-cols-6 gap-1" style="max-width: 600px">
       <div
-        v-if="formData.images.length"
-        class="col-start-1 col-end-7 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mb-6"
+        class="col-start-1 col-end-7 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mb-6 gap-2"
       >
         <div
           v-for="(image, key) in formData.images"
           :key="image.name"
-          class="p-2 relative group"
+          class="relative group"
         >
           <img
             :src="getSrc(formData.images[key])"
@@ -137,25 +143,26 @@ export default defineComponent({
           />
           <button
             type="button"
-            class="hidden group-hover:block absolute right-4 bottom-4 p-2 rounded"
+            class="hidden group-hover:block absolute right-2 bottom-2 p-2 rounded"
             style="background-color: rgba(0, 0, 0, 0.5)"
             @click="formData.images.splice(key, 1)"
           >
             <DeleteIcon fill="white" />
           </button>
         </div>
-        <div
-          class="p-2 border bortder-2 border-dashed flex items-center justify-center"
-          style="min-height: 100px"
+
+        <ImagePicker
+          @update:modelValue="(image) => formData.images.push(image)"
+          v-bind="{ showErrors: false }"
+          style="min-height: 120px; height: 100%"
         >
-          <PlusIcon />
-        </div>
-      </div>
-      <div
-        v-else
-        class="col-start-1 col-end-7 border bortder-2 border-dashed w-full py-9 flex items-center justify-center mb-4"
-      >
-        <ImageIcon width="60px" heigth="48px" />
+          <PlusIcon
+            v-if="!formData.images.length"
+            class="h-full"
+            @update:modelValue="(image) => formData.images.push(image)"
+          />
+          <ImageIcon v-else width="60px" heigth="48px" class="h-full" />
+        </ImagePicker>
       </div>
 
       <Input

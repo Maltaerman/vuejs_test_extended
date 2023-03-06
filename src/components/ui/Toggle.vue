@@ -8,10 +8,6 @@ export default defineComponent({
       type: String,
       default: "",
     },
-    name: {
-      type: String,
-      default: "",
-    },
     modelValue: {
       type: Boolean,
       default: false,
@@ -19,9 +15,11 @@ export default defineComponent({
   },
   computed: {
     model: {
-      get: (value) => value.modelValue,
-      set: function () {
-        this.$emit("update:modelValue", this.modelValue);
+      get: function () {
+        return this.modelValue;
+      },
+      set: function (value: boolean) {
+        this.$emit("update:modelValue", value);
       },
     },
   },

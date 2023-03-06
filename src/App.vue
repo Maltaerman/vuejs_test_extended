@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
-import GlobalAlerts from "@/components/GlobalAlerts.vue";
-import Loader from "@/components/Loader.vue";
+import GlobalAlerts from "@/components/ui/GlobalAlerts.vue";
+import Loader from "@/components/ui/Loader.vue";
 import RouteLayout from "@/layouts/RouteLayout.vue";
 
 export default defineComponent({

@@ -3,6 +3,10 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   props: {
+    showErrors: {
+      type: Boolean,
+      default: true,
+    },
     errors: {
       type: Array as () => string[],
       default: (): string[] => [],
@@ -38,22 +42,28 @@ export default defineComponent({
 
 <template>
   <div class="flex flex-col items-center">
-    <button
-      class="border bortder-2 border-dashed p-2 w-full"
-      type="button"
-      @click="chooseImage"
+    <div
+      class="border bortder-2 border-dashed w-full flex items-center justify-center h-full"
     >
-      Перетягніть файл або <span class="text-active">виберіть на диску</span>
-    </button>
+      <input
+        id="image-picker"
+        type="file"
+        class="file-input border bortder-2 border-dashed p-2 w-full"
+        @change="(event) => setImage(event.target.files)"
+      />
+      <slot>
+        <p class="p-2">
+          Перетягніть файл або
+          <span class="text-active">виберіть на диску</span>
+        </p>
+      </slot>
+    </div>
 
-    <input
-      id="image-picker"
-      class="hidden"
-      type="file"
-      @change="(event) => setImage(event.target.files)"
-    />
-
-    <div class="mt-1 relative flex-1 w-full" style="min-height: 20px">
+    <div
+      v-if="showErrors"
+      class="mt-1 relative flex-1 w-full"
+      style="min-height: 20px"
+    >
       <transition
         enter-active-class="transition ease-in"
         enter-from-class="opacity-0"
@@ -76,3 +86,15 @@ export default defineComponent({
     </div>
   </div>
 </template>
+
+<style scoped>
+.file-input {
+  position: absolute;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  z-index: 1;
+  cursor: pointer;
+}
+</style>

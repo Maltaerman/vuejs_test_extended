@@ -12,3 +12,11 @@ export interface ICreateDesignPayload {
   readonly link: string;
   readonly images: (string | File)[];
 }
+
+export interface IUpdateDesignPayload {
+  readonly id: string;
+  readonly code: string;
+  readonly name: string;
+  readonly link: string;
+  readonly images: (string | File)[];
+}
