@@ -1,6 +1,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { useRoute } from "vue-router";
+import { cloneDeep } from 'lodash';
 import Toggle from "@/components/ui/Toggle.vue";
 import PrimaryButton from "@/components/ui/buttons/PrimaryButton.vue";
 import SecondaryButton from "@/components/ui/buttons/SecondaryButton.vue";
@@ -87,7 +88,7 @@ export default defineComponent({
   watch: {
     value(value) {
       if (this.value) {
-        this.formData = this.value;
+        this.formData = cloneDeep(this.value);
       }
       deep: true;
     },
